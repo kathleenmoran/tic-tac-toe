@@ -23,6 +23,6 @@ class Player
   private
   def input_move
     puts "#{@name}, please enter a number (1-9) that is available to place a '#{piece}'."
-    gets.chomp.to_i - 1
+    gets.chomp.to_i
   end
 end
