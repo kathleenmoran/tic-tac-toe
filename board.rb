@@ -3,7 +3,7 @@ require_relative 'player'
 class Board
   def initialize(dimension=3)
     @dimension = dimension
-    @values = Array.new(@dimension){Array.new(@dimension)}
+    @values = Array.new(@dimension) { Array.new(@dimension) }
     @player_1 = Player.new("X")
     @player_2 = Player.new("O")
     @active_player = @player_1
@@ -29,7 +29,7 @@ class Board
     row_as_string = ""
     VERTICAL_SQUARE_BORDER = "|"
     row.each_with_index do |square, square_index|
-      row_as_string += square ? " #{square} " : " #{square_index + row_index * 3 + 1} "
+      row_as_string += square ? " #{square} " : " #{square_index + row_index * @dimension + 1} "
       if square_index < @dimension - 1
         row_as_string += VERTICAL_SQUARE_BORDER
       else 
@@ -56,6 +56,7 @@ class Board
 
   private
   def make_move
+    puts self
     move = @active_player.input_move
     if is_valid_move?(move)
       @values[calc_row_index(move)][calc_square_index(move)] = @active_player.piece
@@ -64,5 +65,50 @@ class Board
       puts "That is an invalid move, please try again."
       make_move()
     end
+  end
+
+  private
+  def change_active_player
+    @active_player = (@active_player == @player_1) ? player_2 : player_1
+  end
+
+  private
+  def has_win?
+    has_horizontal_win? || has_vertical_win? || has_diagonal_win?
+  end
+
+  private 
+  def has_horizontal_win?
+    @values.any? { |row| all_x_or_o(row) }
+  end
+
+  private
+  def has_vertical_win?
+    columns = []
+    for row_index in 0...@dimension do
+      column = []
+      for column_index in 0...@dimension do
+        column << @values[row_index][column_index]
+      end
+      columns << column
+    end
+    columns.any? { |column| all_x_or_o(column) }
+  end
+
+  private
+  def has_diagonal_win?
+    top_bottom_diagonal = []
+    bottom_top_diagonal = []
+    for i in 0...@dimension do
+      top_bottom_diagonal << @values[i][i]
+      bottom_top_diagonal << @values[i][@dimension - i - 1]
+    end
+    all_x_or_o(top_bottom_diagonal) || all_x_or_o(bottom_top_diagonal)
+  end
+
+  private
+  def all_x_or_o(squares)
+    unique_pieces = squares.uniq
+    !square.uniq.is_nil? && square.uniq.size == 1
   end
 end
