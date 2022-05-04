@@ -10,19 +10,23 @@ class Player
     puts self
   end
 
+  def input_move
+    puts "\n#{@name}, please enter a number (1-9) that is available to place a '#{piece}'."
+    gets.chomp.to_i
+  end
+
+  def declare_winner
+    puts "\n#{@name} won!"
+  end
+
   private
   def input_name
-    puts "What is the name of player #{@@total_players + 1}?"
+    puts "\nWhat is the name of player #{@@total_players + 1}?"
     gets.chomp
   end 
 
   private
   def to_s
     "#{@name}, your piece is '#{@piece}'."
-  end
-
-  def input_move
-    puts "#{@name}, please enter a number (1-9) that is available to place a '#{piece}'."
-    gets.chomp.to_i
   end
 end
