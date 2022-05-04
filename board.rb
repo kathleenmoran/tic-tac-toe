@@ -22,9 +22,8 @@ class Board
     @values.each_with_index do |row, index|
       board_as_string += row_to_s(row, index)
       if index < DIMENSION - 1
-        board_as_string += horizontal_row_border
+        board_as_string += "#{horizontal_row_border}\n"
       end
-      board_as_string += "\n"
     end
     board_as_string
   end
