@@ -1,18 +1,19 @@
-require_relative 'board'
+# frozen_string_literal: true
 
+# a player in a tic-tac-toe game
 class Player
-  @@total_players = 0
   attr_reader :piece
-  def initialize(piece)
-    @name = input_name
+
+  def initialize(piece, number)
     @piece = piece
-    @@total_players += 1
+    @number = number
+    @name = input_name
     puts self
   end
 
   def input_move
     puts "\n#{@name}, please enter a number (1-9) that is available to place a '#{piece}'."
-    gets.chomp.to_i
+    gets.chomp
   end
 
   def declare_winner
@@ -20,12 +21,12 @@ class Player
   end
 
   private
-  def input_name
-    puts "\nWhat is the name of player #{@@total_players + 1}?"
-    gets.chomp
-  end 
 
-  private
+  def input_name
+    puts "\nWhat is the name of player #{@number}?"
+    gets.chomp
+  end
+
   def to_s
     "#{@name}, your piece is '#{@piece}'."
   end
