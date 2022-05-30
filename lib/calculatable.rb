@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # calculations for tic-tac-toe game
-module Calculatable 
+module Calculatable
   DIMENSION = 3
   def make_empty_board(dimension)
     Array.new(dimension) { Array.new(dimension) }

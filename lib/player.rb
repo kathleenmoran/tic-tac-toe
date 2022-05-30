@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
+require_relative 'interfacable'
+
 # a player in a tic-tac-toe game
 class Player
+  include Interfacable
   attr_reader :piece
 
   def initialize(piece, number)
@@ -12,22 +15,22 @@ class Player
   end
 
   def input_move
-    puts "\n#{@name}, please enter a number (1-9) that is available to place a '#{piece}'."
+    input_move_message(@name, @piece)
     gets.chomp
   end
 
   def declare_winner
-    puts "\n#{@name} won!"
+    declare_winner_message(@name)
   end
 
   private
 
   def input_name
-    puts "\nWhat is the name of player #{@number}?"
+    input_name_message(@number)
     gets.chomp
   end
 
   def to_s
-    "#{@name}, your piece is '#{@piece}'."
+    print_player(@name, @piece)
   end
 end

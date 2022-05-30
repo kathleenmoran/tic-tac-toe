@@ -10,23 +10,11 @@ class Board
   include Interfacable
   def initialize
     @values = make_empty_board(DIMENSION)
-    @player1 = Player.new('X', 1)
-    @player2 = Player.new('O', 2)
-    @active_player = @player1
   end
 
-  def play_game
-    puts "\nLet's play tic-tac-toe!"
-    (DIMENSION**2).times do
-      make_move
-      break if win?
-
-      @active_player = @active_player == @player1 ? @player2 : @player1
-    end
-    end_game
+  def win?
+    horizontal_win? || vertical_win? || diagonal_win?
   end
-
-  private
 
   def to_s
     board_as_string = "\n"
@@ -37,6 +25,16 @@ class Board
     board_as_string
   end
 
+  def valid_move?(move)
+    move.to_i.to_s == move && move.to_i.between?(1, (DIMENSION**2)) && @values[calc_row_i(move)][calc_col_i(move)].nil?
+  end
+
+  def update(row_index, col_index, piece)
+    @values[row_index][col_index] = piece
+  end
+
+  private
+
   def row_to_s(row, row_index)
     row_as_string = ''
     row.each_with_index do |square, column_index|
@@ -46,39 +44,12 @@ class Board
     row_as_string
   end
 
-  def valid_move?(move)
-    move.to_i.to_s == move && move.to_i.between?(1, (DIMENSION**2)) && @values[calc_row_i(move)][calc_col_i(move)].nil?
-  end
-
-  def make_move
-    puts self
-    move = @active_player.input_move
-    if valid_move?(move)
-      @values[calc_row_i(move)][calc_col_i(move)] = @active_player.piece
-    else
-      puts 'That is an invalid move, please try again.'
-      make_move
-    end
-  end
-
-  def win?
-    horizontal_win? || vertical_win? || diagonal_win?
-  end
-
   def horizontal_win?
     @values.any? { |row| all_x_or_o(row) }
   end
 
   def vertical_win?
-    columns = []
-    @values.each_with_index do |row, row_index|
-      new_column = []
-      row.each_with_index do |_square, column_index|
-        new_column << @values[column_index][row_index]
-      end
-      columns << new_column
-    end
-    columns.any? { |column| all_x_or_o(column) }
+    @values.transpose.any? { |column| all_x_or_o(column) }
   end
 
   def diagonal_win?
@@ -89,34 +60,5 @@ class Board
       bottom_top_diagonal << row[DIMENSION - row_index - 1]
     end
     all_x_or_o(top_bottom_diagonal) || all_x_or_o(bottom_top_diagonal)
-  end
-
-  def end_game
-    puts self
-    puts "\nGAME OVER"
-    if win?
-      @active_player.declare_winner
-    else
-      puts "\nIt's a tie!"
-    end
-    ask_to_play_again
-  end
-
-  def ask_to_play_again
-    user_input = prompt_play_again
-    if %w[y yes].include?(user_input)
-      reset_board
-      play_game
-    elsif %w[n no].include?(user_input)
-      quit_game
-    else
-      puts "That's an invalid response."
-      ask_to_play_again
-    end
-  end
-
-  def reset_board
-    @values = make_empty_board(DIMENSION)
-    @active_player = @player1
   end
 end
