@@ -8,8 +8,8 @@ require_relative 'calculatable'
 class Board
   include Calculatable
   include Interfacable
-  def initialize
-    @values = make_empty_board(DIMENSION)
+  def initialize(values = make_empty_board(DIMENSION))
+    @values = values
   end
 
   def win?
