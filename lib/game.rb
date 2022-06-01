@@ -8,8 +8,8 @@ require_relative 'interfacable'
 class Game
   include Interfacable
   include Calculatable
-  def initialize
-    @board = Board.new
+  def initialize(board = Board.new)
+    @board = board
     @player1 = Player.new('X', 1)
     @player2 = Player.new('O', 2)
     @active_player = @player1
